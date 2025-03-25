@@ -1,0 +1,487 @@
+#include <stdio.h> 
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
+
+void splash_screen(){ // skip this
+    printf("\n\n\n");
+    printf("                 OOOOOOOOOOOOOOOOOO               OOOOOOOOOOOOOOOOOO      "CYAN"  YYYYYYYYYYYYYYYY                  \n"RESET);
+    printf("             OOOOOOOOOOOOOOOOOOOOOOOOOO       OOOOOOOOOOOOOOOOOOOOOOOOOO  "CYAN"  YYYYYYYYYYYYYYYY                  \n"RESET);
+    printf("            OOOOOOOOOOOOOOOOOOOOOOOOOOOOO   OOOOOOOOOOOOOOOOOOOOOOOOOOOOO  "CYAN" YYYYYYYYYYYYYYYY                  \n"RESET);
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO  "CYAN" YYYYYYYYYYYYYYYY                  \n"RESET);
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO "CYAN"  YYYYYYYYYYYYYYYY                  \n"RESET);
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO  "CYAN"  YYYY       YYYYYY                \n"RESET);
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO   "CYAN"  YYYYYYYYYYYYYYYYYYYYY           \n"RESET);
+    printf("            OOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO                                      \n"RESET);
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                     \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO                   OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO   OOOOOOOOOOOOOOOOOOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO   OOOOOOOOOOOOOOOOOOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO   OOOOOOOOOOOOOOOOOOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO                                   OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("           OOOOOOOOOOOOOO  OOOOOOOOOOOOOO   OOOOOOOOOOOOOO  OOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("            OOOOOOOOOOOOOOOOOOOOOOOOOOOO     OOOOOOOOOOOOOOOOOOOOOOOOOOOO    OOOOOOOOOOOOO                    \n");
+    printf("             OOOOOOOOOOOOOOOOOOOOOOOOOO       OOOOOOOOOOOOOOOOOOOOOOOOOO     OOOOOOOOOOOOO                    \n");
+    Sleep(3000); 
+    system("cls"); 
+
+     
+     printf("\t\t\t\t          "YELLOW"        Algerian Democratic Republic                  \n"RESET);
+     printf("\t\t\t\t     "YELLOW"   Ministry of Higher Education and Scientific Research\n\n\n"RESET);
+     printf("\t\t\t\t    "GREEN" _______________________________________________________\n"RESET);
+     printf("\t\t\t\t   "GREEN" |      "CYAN"  _______     _______     _                    "GREEN"  |\n"RESET);
+     printf("\t\t\t\t    "GREEN"|      "CYAN" |  _____|   |  _____|   | | "YELLOW" %ccole nationale  "GREEN"  |\n"RESET, 130);
+     printf("\t\t\t\t  "GREEN"  |      "CYAN" | |_____    | |_____    | |                    "GREEN" |\n"RESET);
+     printf("\t\t\t\t  "GREEN"  |      "CYAN" |  _____|   |_____  |   | | "YELLOW" sup%crieure       "GREEN"  |\n"RESET, 130);
+     printf("\t\t\t\t   "GREEN" |      "CYAN" | |_____     _____| |   | |                    "GREEN" |\n"RESET);
+     printf("\t\t\t\t   "GREEN" |      "CYAN" |_______|   |_______|   |_| "YELLOW" d'informatique    "GREEN" |\n"RESET);
+     printf("\t\t\t\t   "GREEN" |_______________________________________________________|\n\n\n"RESET);
+     Sleep(4000); 
+     system("cls"); 
+ 
+     
+     printf("\t\t\t\t\t"YELLOW"CPI - First Year - University Year 2024/2025 \n\n\n"RESET);
+     printf("\t\t\t\t "GREEN"___________________________________________________________________\n"RESET);
+     printf("\t\t\t\t"GREEN"|                                                                   |\n"RESET);
+     printf("\t\t\t\t"GREEN"| "RESET"BY          :           MOULAHCENE ABDELMOUNAIM                 "GREEN"  |\n"RESET);
+     printf("\t\t\t\t"GREEN"|  "RESET"                       ALEM MOHAMED ADEL                      "GREEN"   |\n"RESET);
+     printf("\t\t\t\t"GREEN"|                                                                   |\n"RESET);
+     printf("\t\t\t\t"GREEN"|   "RESET"        SECTION : B           GROUPE: 05                 "GREEN"       |\n"RESET);
+     printf("\t\t\t\t"GREEN"|___________________________________________________________________|\n\n"RESET);
+     Sleep(4000); 
+     system("cls");
+    }
+
+#define MAX 100
+
+typedef struct pLink
+{                          // Link to city
+    char dest[30];         // Destination name
+    int dist;              // Distance from Source
+    struct pLink *newCity; // recursive structure to create however much new links
+} pLink;
+
+typedef struct City
+{ // Structure of City
+    char name[30];
+    pLink *Links; // Pointers to Cities associated with this city
+} City;
+
+void add_link(City *city, const char *dest, int dist)
+{
+    pLink *new_link = (pLink *)malloc(sizeof(pLink)); // Allocate memory for new link
+    strcpy(new_link->dest, dest);                     // Copy destination city name
+    new_link->dist = dist;                            // get distance
+    new_link->newCity = city->Links;                  // Link the new link to the existing list of links for the city
+    city->Links = new_link;                           // assign city to point to new link
+}
+
+int import_data(City cities[])
+{
+    FILE *data = fopen("data.csv", "r");
+    if (!data)
+        return 0;
+
+    int city_count = 0;
+    char line[256];
+    char city_name[30];
+    char dest[30];
+    int dist;
+
+    // Read each line from file
+    while (fgets(line, sizeof(line), data) && city_count < MAX)
+    {
+        int pos = 0; // Position in line
+        int i = 0;   // Position in name buffer
+
+        // Get city name (read until comma or newline)
+        while (line[pos] && line[pos] != ',' && line[pos] != '\n' && i < 29)
+        {
+            city_name[i++] = line[pos++];
+        }
+        city_name[i] = '\0';
+
+        // Save city and initialize its links
+        strcpy(cities[city_count].name, city_name);
+        cities[city_count].Links = NULL;
+
+        // Skip comma after city name
+        if (line[pos] == ',')
+            pos++;
+
+        // Read all connections for this city
+        while (line[pos] && line[pos] != '\n')
+        {
+            // Get destination city name
+            i = 0;
+            while (line[pos] && line[pos] != ':' && i < 29)
+            {
+                dest[i++] = line[pos++];
+            }
+            dest[i] = '\0';
+
+            // Skip colon
+            if (line[pos] == ':')
+                pos++;
+
+            // Read the distance number
+            char num[10];
+            i = 0;
+            while (line[pos] >= '0' && line[pos] <= '9')
+            {
+                num[i++] = line[pos++];
+            }
+            num[i] = '\0';
+
+            if (i > 0)
+            { // If we found a number
+                dist = atoi(num);
+                add_link(&cities[city_count], dest, dist);
+            }
+
+            // Skip comma between connections
+            if (line[pos] == ',')
+                pos++;
+        }
+
+        city_count++;
+    }
+
+    fclose(data);
+    return city_count;
+}
+
+void display_graph(City cities[], int city_count)
+{
+    for (int i = 0; i < city_count; i++)
+    {                                    // Loop through all cities
+        printf("\t\t\t\t"YELLOW"%s:\t"RESET, cities[i].name); // write city name
+
+        pLink *link = cities[i].Links; // Get first link
+        while (link)
+        { // go through linked list
+            printf(" "CYAN" -->"RESET" %s: %d\t "YELLOW"| "RESET, link->dest, link->dist);
+            link = link->newCity; // Move to the next link
+        }
+        printf("\n\n");
+    }
+}
+
+#define VISITED_MAX 100 // Maximum number of cities we can visit
+
+void print_path(char *visited[], int visited_count, int total_dist)
+{
+    // Print arrow between cities
+    printf("\t\t\t\t");
+    for (int i = 0; i < visited_count; i++)
+    {
+        printf("%s", visited[i]);
+        if (i < visited_count - 1)
+            printf(""CYAN" -> "RESET);
+    }
+    printf(" : %d\n", total_dist);
+}
+
+void find_path_recursive(City cities[], int city_count, char *start, char *end,
+                         char *visited[], int visited_count, int total_dist,
+                         char *best_path[], int *best_count, int *min_dist)
+{
+
+    // Find current city in array
+    int current_city_index = -1;
+    for (int i = 0; i < city_count; i++)
+    {
+        if (strcmp(cities[i].name, start) == 0)
+        {
+            current_city_index = i;
+            break;
+        }
+    }
+
+    if (current_city_index == -1)
+        return;
+
+    // Add current city to path
+    visited[visited_count++] = start;
+
+    // If we reached destination, check if this path is shorter
+    if (strcmp(start, end) == 0)
+    {
+        if (*min_dist == -1 || total_dist < *min_dist)
+        {
+            *min_dist = total_dist;
+            *best_count = visited_count;
+            // Save current path as best path
+            for (int i = 0; i < visited_count; i++)
+            {
+                best_path[i] = visited[i];
+            }
+        }
+        return;
+    }
+
+    // Try each connection
+    pLink *link = cities[current_city_index].Links;
+    while (link)
+    {
+        // Check if not already visited
+        int already_visited = 0;
+        for (int i = 0; i < visited_count; i++)
+        {
+            if (strcmp(visited[i], link->dest) == 0)
+            {
+                already_visited = 1;
+                break;
+            }
+        }
+
+        if (!already_visited)
+        {
+            find_path_recursive(cities, city_count, link->dest, end,
+                                visited, visited_count, total_dist + link->dist,
+                                best_path, best_count, min_dist);
+        }
+        link = link->newCity;
+    }
+}
+
+void find_path(City cities[], int city_count, char *start, char *end)
+{
+    char *visited[VISITED_MAX];
+    char *best_path[VISITED_MAX];
+    int best_count = 0;
+    int min_dist = -1;
+
+    find_path_recursive(cities, city_count, start, end, visited, 0, 0,
+                        best_path, &best_count, &min_dist);
+
+    if (min_dist != -1)
+    {
+        printf("\t\t\t\tShortest path:\n");
+        print_path(best_path, best_count, min_dist);
+    }
+}
+
+void add_new_city(City cities[], int *city_count) {
+    char new_city[30];
+    
+    // Get city name
+    printf("\t\t\t\tEnter new city name: ");
+    scanf("%s", new_city);
+    
+    // Check if city already exists
+    for(int i = 0; i < *city_count; i++) {
+        int match = 1;
+        for(int j = 0; new_city[j] != '\0'; j++) {
+            if(new_city[j] != cities[i].name[j]) {
+                match = 0;
+                break;
+            }
+        }
+        if(match) {
+            printf("\t\t\t\tCity already exists!\n");
+            return;
+        }
+    }
+    
+    // Add new city
+    strcpy(cities[*city_count].name, new_city);
+    cities[*city_count].Links = NULL;
+    (*city_count)++;
+    printf("\t\t\t\t"GREEN"City added successfully!\n"RESET);
+}
+
+void add_new_path(City cities[], int city_count) {
+    char from[30], to[30];
+    int distance;
+    int from_index = -1, to_index = -1;
+    
+    // Get path details
+    printf("\t\t\t\tEnter source city: ");
+    scanf("%s", from);
+    printf("\t\t\t\tEnter destination city: ");
+    scanf("%s", to);
+    printf("\t\t\t\tEnter distance: ");
+    scanf("%d", &distance);
+    
+    // Find cities in array
+    for(int i = 0; i < city_count; i++) {
+        int match = 1;
+        for(int j = 0; from[j] != '\0'; j++) {
+            if(from[j] != cities[i].name[j]) {
+                match = 0;
+                break;
+            }
+        }
+        if(match) from_index = i;
+        
+        match = 1;
+        for(int j = 0; to[j] != '\0'; j++) {
+            if(to[j] != cities[i].name[j]) {
+                match = 0;
+                break;
+            }
+        }
+        if(match) to_index = i;
+    }
+    
+    // Check if both cities exist
+    if(from_index == -1 || to_index == -1) {
+        printf("\t\t\t\t"YELLOW"One or both cities don't exist!\n"RESET);
+        return;
+    }
+    
+    // Add path
+    add_link(&cities[from_index], to, distance);
+    printf("\t\t\t\t"GREEN"Path added successfully!\n"RESET);
+}
+
+void delete_city(City cities[], int *city_count) {
+    char to_delete[30];
+    printf("\t\t\t\tEnter city name to delete: ");
+    scanf("%s", to_delete);
+    
+    // Find city index
+    int del_idx = -1;
+    for(int i = 0; i < *city_count; i++) {
+        if(strcmp(cities[i].name, to_delete) == 0) {
+            del_idx = i;
+            break;
+        }
+    }
+    
+    if(del_idx == -1) {
+        printf("\t\t\t\t "RED"City not found!\n"RESET);
+        return;
+    }
+    
+    // Delete paths from the city
+    while(cities[del_idx].Links) {
+        pLink *temp = cities[del_idx].Links;
+        cities[del_idx].Links = temp->newCity;
+        free(temp);
+    }
+    
+    // Delete paths to the city from all other cities
+    for(int i = 0; i < *city_count; i++) {
+        if(i != del_idx) {
+            pLink *prev = NULL;
+            pLink *curr = cities[i].Links;
+            
+            while(curr) {
+                if(strcmp(curr->dest, to_delete) == 0) {
+                    if(prev) {
+                        prev->newCity = curr->newCity;
+                    } else {
+                        cities[i].Links = curr->newCity;
+                    }
+                    free(curr);
+                    break;
+                }
+                prev = curr;
+                curr = curr->newCity;
+            }
+        }
+    }
+    
+    // Shift remaining cities left
+    for(int i = del_idx; i < *city_count - 1; i++) {
+        cities[i] = cities[i + 1];
+    }
+    
+    (*city_count)--;
+    printf("\t\t\t\t "RED"City deleted!\n"RESET);
+}
+void menu(){
+
+    printf("\n\t\t\t\t"GREEN"============================================\n"RESET);
+    printf("\t\t\t\t"GREEN"|           "YELLOW"       MAIN MENU     "GREEN"          |\n"RESET);
+    printf("\t\t\t\t"GREEN"============================================\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 1. "RESET"Display graph               "GREEN"          |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 2. "RESET"Find shortest path          "GREEN"          |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 3. "RESET"Add new city                 "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 4. "RESET"Add new path                 "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 5. "RESET"Check if path exists         "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 6. "RESET"Delete City                  "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 7. "RESET"Exit                         "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"============================================\n"RESET);
+    printf("\t\t\t\t"YELLOW" Enter choice: "RESET);
+}
+
+// Modify main to include new options
+int main(int argc, char const *argv[]) {
+    splash_screen();
+    City cities[MAX];
+    int city_count = import_data(cities);
+    int choice;
+    char source[30], dest[30];
+    
+    do {
+        
+        menu();
+        scanf("%d", &choice);
+        switch(choice) {
+            case 1:
+                display_graph(cities, city_count);
+                break;
+            case 2:
+                
+                printf("\t\t\t\tEnter source city: ");
+                scanf("%s", source);
+                printf("\t\t\t\tEnter destination city: ");
+                scanf("%s", dest);
+                find_path(cities, city_count, source, dest);
+                break;
+            case 3:
+            
+                add_new_city(cities, &city_count);
+                break;
+            case 4:
+            
+                add_new_path(cities, city_count);
+                break;
+            case 5:
+                
+                printf("\t\t\t\tEnter first city: ");
+                scanf("%s", source);
+                printf("\t\t\t\tEnter second city: ");
+                scanf("%s", dest);
+                char* visited[VISITED_MAX];
+                char* best_path[VISITED_MAX];
+                int best_count = 0;
+                int min_dist = -1;
+                
+                find_path_recursive(cities, city_count, source, dest, visited, 0, 0,
+                                  best_path, &best_count, &min_dist);
+                                  
+                if(min_dist != -1) {
+                    printf("\t\t\t\t"GREEN"Path exists between %s and %s\n"RESET, source, dest);
+                } else {
+                    printf("\t\t\t\t"RED"No path exists between %s and %s\n"RESET, source, dest);
+                }
+                break;
+            case 6:
+                
+                delete_city(cities, &city_count);
+                break;
+        }
+    } while(choice != 7);
+    
+    return 0;
+}
+
