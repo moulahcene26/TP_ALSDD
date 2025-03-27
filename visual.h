@@ -1,3 +1,5 @@
+#ifndef VISUAL_H
+#define VISUAL_H
 //===============================================================================
 #include <stdio.h> 
 #include <stdlib.h>
@@ -87,13 +89,15 @@ void menu(){
     printf("\t\t\t\t"GREEN"|           "YELLOW"       MAIN MENU     "GREEN"          |\n"RESET);
     printf("\t\t\t\t"GREEN"============================================\n"RESET);
     printf("\t\t\t\t"GREEN"|"YELLOW" 1. "RESET"Display graph               "GREEN"          |\n"RESET);
-    printf("\t\t\t\t"GREEN"|"YELLOW" 2. "RESET"Find shortest path          "GREEN"          |\n"RESET);
-    printf("\t\t\t\t"GREEN"|"YELLOW" 3. "RESET"Add new city                 "GREEN"         |\n"RESET);
-    printf("\t\t\t\t"GREEN"|"YELLOW" 4. "RESET"Add new path                 "GREEN"         |\n"RESET);
-    printf("\t\t\t\t"GREEN"|"YELLOW" 5. "RESET"Check if path exists         "GREEN"         |\n"RESET);
-    printf("\t\t\t\t"GREEN"|"YELLOW" 6. "RESET"Delete City                  "GREEN"         |\n"RESET);
-    printf("\t\t\t\t"GREEN"|"YELLOW" 7. "RESET"Exit                         "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 2. "RESET"Show the cities that can be reached   "GREEN"|\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 3. "RESET"Check if path exists         "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 4. "RESET"Find shortest path          "GREEN"          |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 5. "RESET"Add new city                 "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 6. "RESET"Add new path                 "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 7. "RESET"Delete City                  "GREEN"         |\n"RESET);
+    printf("\t\t\t\t"GREEN"|"YELLOW" 8. "RESET"Exit                         "GREEN"         |\n"RESET);
     printf("\t\t\t\t"GREEN"============================================\n"RESET);
     printf("\t\t\t\t"YELLOW" Enter choice: "RESET);
 }
 //------------------------------------------------------//
+#endif

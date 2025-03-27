@@ -1,3 +1,5 @@
+#ifndef LOGIC_H
+#define LOGIC_H
 //===============================================================================
 #include <stdio.h>
 #include <stdlib.h>
@@ -126,7 +128,7 @@ void display_graph(City cities[], int city_count)
         pLink *link = cities[i].Links; // Get first link
         while (link)
         { // go through linked list
-            printf(" " CYAN " -->" RESET " %s: %d\t " YELLOW "| " RESET, link->dest, link->dist);
+            printf(" " CYAN " -->" RESET " %s:"GREEN" %d\t " YELLOW "| " RESET, link->dest, link->dist);
             link = link->newCity; // Move to the next link
         }
         printf("\n\n");
@@ -143,7 +145,7 @@ void print_path(char *visited[], int visited_count, int total_dist)
         if (i < visited_count - 1)
             printf("" CYAN " -> " RESET);
     }
-    printf(" : %d\n", total_dist);
+    printf(" : "GREEN"%d\n"RESET, total_dist);
 }
 //------------------------------------------------------//
 void find_path_recursive(City cities[], int city_count, char *start, char *end,
@@ -221,7 +223,7 @@ void find_path(City cities[], int city_count, char *start, char *end)
 
     if (min_dist != -1)
     {
-        printf("\t\t\t\tShortest path:\n");
+        printf("\t\t\t\t"YELLOW"Shortest path:\n"RESET);
         print_path(best_path, best_count, min_dist);
     }
 }
@@ -383,4 +385,36 @@ void delete_city(City cities[], int *city_count)
     (*city_count)--;
     printf("\t\t\t\t " RED "City deleted!\n" RESET);
 }
+//----------------------------------------------------------------------------//
+void show_reachable_cities(City cities[], int city_count, const char *city_name) {
+    // Find the city in the array
+    int city_index = -1;
+    for (int i = 0; i < city_count; i++) {
+        if (strcmp(cities[i].name, city_name) == 0) {
+            city_index = i;
+            break;
+        }
+    }
+
+    // If the city is not found, print an error message
+    if (city_index == -1) {
+        printf("\t\t\t\t" RED "City not found!\n" RESET);
+        return;
+    }
+
+    // Print reachable cities
+    printf("\t\t\t\t"YELLOW"Cities reachable from "CYAN"%s"RESET":\n", city_name);
+    pLink *link = cities[city_index].Links;
+    if (link == NULL) {
+        printf("\t\t\t\t"RED"No reachable cities.\n"RESET);
+        return;
+    }
+
+    while (link) {
+        printf("\t\t\t\t- "GREEN"%s "RESET"(Distance: "CYAN"%d"RESET")\n", link->dest, link->dist);
+        link = link->newCity;
+    }
+}
+
 //======================================================================
+#endif

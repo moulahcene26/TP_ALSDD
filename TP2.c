@@ -7,6 +7,7 @@
 
 int main(int argc, char const *argv[])
 {
+    printf("The program might take time to load, please be patient!\n");
     splash_screen();
     City cities[MAX];
     int city_count = import_data(cities);
@@ -26,22 +27,12 @@ int main(int argc, char const *argv[])
             pause();
             break;
         case 2:
-            printf("\t\t\t\tEnter source city (Case Sensitive): ");
+            printf("\t\t\t\tEnter city name to see reachable cities: ");
             scanf("%s", source);
-            printf("\t\t\t\tEnter destination city (Case Sensitive) : ");
-            scanf("%s", dest);
-            find_path(cities, city_count, source, dest);
+            show_reachable_cities(cities, city_count, source);
             pause();
             break;
         case 3:
-            add_new_city(cities, &city_count);
-            pause();
-            break;
-        case 4:
-            add_new_path(cities, city_count);
-            pause();
-            break;
-        case 5:
             printf("\t\t\t\tEnter first city: ");
             scanf("%s", source);
             printf("\t\t\t\tEnter second city: ");
@@ -64,12 +55,29 @@ int main(int argc, char const *argv[])
             }
             pause();
             break;
+        case 4:
+            printf("\t\t\t\tEnter source city (Case Sensitive): ");
+            scanf("%s", source);
+            printf("\t\t\t\tEnter destination city (Case Sensitive) : ");
+            scanf("%s", dest);
+            find_path(cities, city_count, source, dest);
+            pause();
+            break;
+        case 5:
+            add_new_city(cities, &city_count);
+            pause();
+            break;
         case 6:
+            add_new_path(cities, city_count);
+            pause();
+            break;
+
+        case 7:
             delete_city(cities, &city_count);
             pause();
             break;
         }
-    } while (choice != 7);
+    } while (choice != 8);
 
     return 0;
 }
