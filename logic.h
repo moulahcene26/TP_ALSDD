@@ -10,18 +10,18 @@
 #define MAX 100
 #define VISITED_MAX 100 // Maximum number of cities we can visit
 //===============================================================================
+typedef struct City
+{ // Structure of City
+    char name[30];
+    pLink *Links; // Pointers to Cities associated with this city
+} City;
+
 typedef struct pLink
 {                          // Link to city
     char dest[30];         // Destination name
     int dist;              // Distance from Source
     struct pLink *newCity; // recursive structure to create however much new links
 } pLink;
-
-typedef struct City
-{ // Structure of City
-    char name[30];
-    pLink *Links; // Pointers to Cities associated with this city
-} City;
 //===============================================================================
 int import_data(City cities[]);
 void display_graph(City cities[], int city_count);
@@ -60,7 +60,7 @@ int import_data(City cities[])
     while (fgets(line, sizeof(line), data) && city_count < MAX)
     {
         int pos = 0; // Position in line
-        int i = 0;   // Position in name buffer
+        int i = 0;   // Position in name 
 
         // Get city name (read until comma or newline)
         while (line[pos] && line[pos] != ',' && line[pos] != '\n' && i < 29)
