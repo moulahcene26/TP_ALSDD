@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+
 //===============================================================================
 void splash_screen();
 void pause();
