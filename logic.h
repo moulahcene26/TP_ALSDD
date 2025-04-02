@@ -1,413 +1,378 @@
-#ifndef LOGIC_H
-#define LOGIC_H
+#ifndef LOGIC_H 
+#define LOGIC_H 
 //===============================================================================
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h> 
+#include <stdlib.h> 
 #include <stdbool.h>
 #include <string.h>
-#include <windows.h>
-#include "visual.h"
+#include <windows.h> 
+#include "visual.h" 
 //===============================================================================
-#define MAX 100
-#define VISITED_MAX 100 // maximum number of cities we can visit
+#define MAX 100 // the maximum number of cities 
+#define VISITED_MAX 100 // the maximum number of cities in a path
+#define NOT_FOUND -1   
 //===============================================================================
 
-// structure for a link from one city to another
-typedef struct pLink
+
+typedef struct pLink // Define a structure for a city connection (a road to another city)
 {
-    char dest[30];         // destination city name
-    int dist;              // distance to the destination
-    struct pLink *newCity; // pointer to the next link in the list
-} pLink;
+    char dest[30];         // Name of the destination city this link connects to
+    int dist;              // Distance to travel to the destination city
+    struct pLink *newCity; // Pointer to the next connection in the list
+} pLink; // this struct allows for unlimited cities
 
-// structure for a city
-typedef struct City
+
+typedef struct City // Define a structure to represent a city
 {
-    char name[30];   // name of the city
-    pLink *Links;    // pointer to the list of linked cities
-} City;
+    char name[30];   // name of this city (like "City1", "City2", etc.)
+    pLink *Links;    // pointer to the first connection this city has (linked list)
+} City; // 
 
 //===============================================================================
-// function declarations
-int import_data(City cities[]);
-void display_graph(City cities[], int city_count);
-void add_link(City *city, const char *dest, int dist);
-void add_new_city(City cities[], int *city_count);
-void delete_city(City cities[], int *city_count);
-void add_new_path(City cities[], int city_count);
-void print_path(char *visited[], int visited_count, int total_dist);
-void find_path(City cities[], int city_count, char *start, char *end);
+int import_data(City cities[]); // read city data from our csv file
+void display_graph(City cities[], int city_count); // show all cities and their connections
+void add_link(City *city, const char *dest, int dist); // add a new connection from one city to another
+void add_new_city(City cities[], int *city_count); // add a new city
+void delete_city(City cities[], int *city_count); // remove a city and all its connections
+void add_new_path(City cities[], int city_count);  // create a new path between existing cities
+void print_path(char *visited[], int visited_count, int total_dist); // display a path with its total distance
+void find_path(City cities[], int city_count, char *start, char *end); // find the shortest path between two cities
 void find_path_recursive(City cities[], int city_count, char *start, char *end,
                          char *visited[], int visited_count, int total_dist,
-                         char *best_path[], int *best_count, int *min_dist);
+                         char *best_path[], int *best_count, int *min_dist); // try all possible paths recursively
+void show_reachable_cities(City cities[], int city_count, const char *city_name); // show all places you can go from a city                       
 //===============================================================================
 
-// add a new link to a city's list of links
-void add_link(City *city, const char *dest, int dist)
+int import_data(City cities[]) // Function definition for importing data from CSV
 {
-    pLink *new_link = (pLink *)malloc(sizeof(pLink)); // get memory for a new link
-    strcpy(new_link->dest, dest);                     // copy the destination name
-    new_link->dist = dist;                            // store the distance
-    new_link->newCity = city->Links;                  // point to the existing links
-    city->Links = new_link;                           // set this as the new first link
-}
-//------------------------------------------------------//
-// read city data from a file and add cities and their links
-int import_data(City cities[])
-{
-    FILE *data = fopen("data.csv", "r");
-    if (!data)
-        return 0; // return zero if file could not be opened
-
-    int city_count = 0;
-    char line[256];
-    char city_name[30];
-    char dest[30];
-    int dist;
-
-    // go through each line in the file
-    while (fgets(line, sizeof(line), data) && city_count < MAX)
+    FILE *data = fopen("data.csv", "r"); // Open the data file for reading
+    if (!data) 
+    return 0; // Check if file opening failed
+    
+    int city_count = 0; // Initialize counter for how many cities we've read
+    char line[256]; // hold each line we read from the file
+    char origin[30]; // hold the source city name
+    char destination[30]; // hold the destination city name
+    int distance; //var to store the distance between cities
+    
+    
+    fgets(line, sizeof(line), data); // Read the first line and ignore it (skip the header line)
+    
+    // go through each remaining line in the file one by one
+    while (fgets(line, sizeof(line), data)) // Keep reading lines until end of file
     {
-        int pos = 0; // current position in the line
-        int i = 0;   // position in the city name
-
-        // get the city name (until comma or newline)
-        while (line[pos] && line[pos] != ',' && line[pos] != '\n' && i < 29)
-        {
-            city_name[i++] = line[pos++];
+        // read lines with format: origin,destination,distance
+        if (sscanf(line, "%29[^,],%29[^,],%d", origin, destination, &distance) != 3) // store 3 items from the line
+        continue; // skip this line if it doesn't have all three informations
+        
+        int origin_index = NOT_FOUND; // propose we haven't found this origin city
+        for (int i = 0; i < city_count; i++) { // Loop through all cities we already know about
+            if (strcmp(cities[i].name, origin) == 0) { // Compare city names (==0 means they match exactly)
+                origin_index = i; // Remember where we found this city
+                break; // stop searching, we found what we needed
+            }
         }
-        city_name[i] = '\0'; // end the string
-
-        // save the city name and set links to null
-        strcpy(cities[city_count].name, city_name);
-        cities[city_count].Links = NULL;
-
-        // skip the comma after the city name, if present
-        if (line[pos] == ',')
-            pos++;
-
-        // read all connections for this city in the same line
-        while (line[pos] && line[pos] != '\n')
-        {
-            // get the destination city name
-            i = 0;
-            while (line[pos] && line[pos] != ':' && i < 29)
-            {
-                dest[i++] = line[pos++];
-            }
-            dest[i] = '\0'; // end the string
-
-            // skip the colon
-            if (line[pos] == ':')
-                pos++;
-
-            // read the distance number as a string
-            char num[10];
-            i = 0;
-            while (line[pos] >= '0' && line[pos] <= '9')
-            {
-                num[i++] = line[pos++];
-            }
-            num[i] = '\0'; // end the string
-
-            // if we have a number, convert and add the link
-            if (i > 0)
-            {
-                dist = atoi(num);
-                add_link(&cities[city_count], dest, dist);
-            }
-
-            // skip the comma between connections
-            if (line[pos] == ',')
-                pos++;
+        
+        if (origin_index == NOT_FOUND) { // If this origin city isn't in our list yet we need to add this new city to our list
+            if (city_count >= MAX) // Check if we have space for more cities
+            continue; // skip if full 
+            
+            strcpy(cities[city_count].name, origin); // copy the city name to our list
+            cities[city_count].Links = NULL; // initialize with no connections
+            origin_index = city_count; // remember where we put this new city
+            city_count++; // increment city counter
         }
-
-        city_count++; // move to the next city
+        
+        
+        add_link(&cities[origin_index], destination, distance); // Add a connection from origin city to destination city
     }
-
-    fclose(data); // close the file
-    return city_count; // return the number of cities read
+    
+    fclose(data); // close file 
+    return city_count; // return number of found cities
 }
 //------------------------------------------------------//
-// display the list of cities and their connections
-void display_graph(City cities[], int city_count)
+void display_graph(City cities[], int city_count) 
 {
-    for (int i = 0; i < city_count; i++)
+    for (int i = 0; i < city_count; i++) // Loop through each city we know about
     {   
-        // print the city name
-        printf("\t\t\t\t" YELLOW "%s:\t" RESET, cities[i].name);
+        
+        printf("\t\t\t\t" YELLOW "%s:\t" RESET, cities[i].name); // Print city name in yellow
 
-        // print each link for this city
-        pLink *link = cities[i].Links;
-        while (link)
+        // Print each connection from this city to other cities
+        pLink *link = cities[i].Links; // Start with the first connection
+        while (link) // Keep going as long as there's another connection (looping through the linked list)
         {
-            printf(" " CYAN " -->" RESET " %s:" GREEN " %d\t " YELLOW "| " RESET, link->dest, link->dist);
-            link = link->newCity; // move to the next link
+            printf(" " CYAN " -->" RESET " %s:" GREEN " %d\t " YELLOW "| " RESET, link->dest, link->dist); // Print destination and distance
+            link = link->newCity; // Move to the next connection in the list
         }
-        printf("\n\n");
+        printf("\n\n"); 
     }
 }
 //------------------------------------------------------//
-// print the path of visited cities with the total distance
+void add_link(City *city, const char *dest, int dist) 
+{
+    pLink *new_link = (pLink *)malloc(sizeof(pLink)); // allocate space in memory for new connection
+    strcpy(new_link->dest, dest);                     // Copy the destination city name to this connection
+    new_link->dist = dist;                            // Store the distance to this destination
+    new_link->newCity = city->Links;                  // Connect this new link to the existing linked list
+    city->Links = new_link;                           // make new header (start of list)
+}
+//------------------------------------------------------//
+void add_new_city(City cities[], int *city_count) 
+{
+    char new_city[30]; // hold the new city name
+    printf("\t\t\t\tEnter new city name: "); 
+    scanf("%s", new_city); // read the user input for a city name
+
+    // Check if this city already exists in our list
+    bool city_exists = false; // Start by assuming it's not repeated
+    for (int i = 0; i < *city_count; i++) // Loop through all existing cities
+    {
+        if (strcmp(cities[i].name, new_city) == 0) // Compare this city with the new name
+        {
+            city_exists = true; // mark as repeated if names are the same
+            break; // Stop checking once we find a match
+        }
+    }
+
+    if (city_exists) // If we found this city already exists
+    {
+        printf("\t\t\t\t" RED "City already exists!\n" RESET); // Tell user we can't add existing cities
+        return; 
+    }
+
+    // Add the new city to our list
+    strcpy(cities[*city_count].name, new_city); // Copy the name to our city list
+    cities[*city_count].Links = NULL; // Start with no connections
+    (*city_count)++; // Increase the count of cities
+    printf("\t\t\t\t" GREEN "City added successfully!\n" RESET); // Tell user it worked
+}
+//------------------------------------------------------//
+void delete_city(City cities[], int *city_count) 
+{
+    char to_delete[30]; //hold the name of city to delete
+    printf("\t\t\t\tEnter city name to delete: "); 
+    scanf("%s", to_delete); // read the user input for a city name to delete
+
+    // Search for the city in our list
+    bool city_found = false; // Start by assuming we haven't found it
+    int del_idx = NOT_FOUND; // Initialize index as not found
+    for (int i = 0; i < *city_count && !city_found; i++) // Check each city until we find it
+    {
+        if (strcmp(cities[i].name, to_delete) == 0) // Compare city names
+        {
+            city_found = true; // Mark that we found the city
+            del_idx = i; // Remember where it is in the list
+        }
+    }
+
+    if (!city_found) // If we didn't find the city
+    {
+        printf("\t\t\t\t" RED "City not found!\n" RESET); // Tell user city doesn't exist
+        return; 
+    }
+
+    // Free all connections leaving from this city
+    pLink *temp; // temp pointer 
+    while (cities[del_idx].Links) // when there are connections to delete
+    {
+        temp = cities[del_idx].Links; // Save the current connection
+        cities[del_idx].Links = temp->newCity; // Move to the next connection
+        free(temp); // Delete the saved connection
+    }
+
+    // Remove connections TO this city from all other cities
+    for (int i = 0; i < *city_count; i++) // Check each city
+    {
+        if (i == del_idx) // Skip the city we're deleting
+            continue; // Move to next city
+
+        // Check if the first connection is to the city we're deleting
+        if (cities[i].Links && strcmp(cities[i].Links->dest, to_delete) == 0) // If first link points to deleted city
+        {
+            temp = cities[i].Links; // Save the connection
+            cities[i].Links = temp->newCity; // skip this connection
+            free(temp); // Free the memory of this connection
+        }
+    }
+
+    // Shift all cities after this one up in the array (to fill the gap)
+    for (int i = del_idx; i < *city_count - 1; i++) // For each city after the deleted one
+    {
+        cities[i] = cities[i + 1]; // Move the next city into this position
+    }
+
+    (*city_count)--; // decrement count of cities by one
+    printf("\t\t\t\t" GREEN "City deleted successfully!\n" RESET); // Tell user it worked
+}
+//----------------------------------------------------------------------------//
 void print_path(char *visited[], int visited_count, int total_dist)
 {
-    // print each city and an arrow between them
-    printf("\t\t\t\t");
-    for (int i = 0; i < visited_count; i++)
+    // Print each city name with arrows between them to show the path
+    printf("\t\t\t\t"); 
+    for (int i = 0; i < visited_count; i++) // For each city in the path
     {
-        printf("%s", visited[i]);
-        if (i < visited_count - 1)
-            printf("" CYAN " -> " RESET);
+        printf("%s", visited[i]); // Print the city name
+        if (i < visited_count - 1) // If this isn't the last city
+            printf("" CYAN " -> " RESET); // Add an arrow to the next city
     }
-    printf(" : " GREEN "%d\n" RESET, total_dist);
+    printf(" : " GREEN "%d\n" RESET, total_dist); // Show the total distance
 }
 //------------------------------------------------------//
-// recursive function to find a path from start to end
+void add_new_path(City cities[], int city_count) 
+{
+    char from[30], to[30]; // names of cities to connect
+    int distance; // var for the distance between them
+    bool source_exists = false, dest_exists = false; // to check if both cities exist
+    int from_index = NOT_FOUND, to_index = NOT_FOUND; // to remember where the cities are in our list
+
+    printf("\t\t\t\tEnter source city: "); // Ask for the starting city
+    scanf("%s", from); 
+    printf("\t\t\t\tEnter destination city: "); // Ask for the ending city
+    scanf("%s", to); 
+    printf("\t\t\t\tEnter distance: "); // Ask for how far apart they are
+    scanf("%d", &distance); 
+
+    // Check if both cities exist in data
+    for (int i = 0; i < city_count; i++) 
+    {
+        if (strcmp(cities[i].name, from) == 0) // If this is the same as  our source city
+        {
+            source_exists = true; // Mark that source exists
+            from_index = i; // Remember where we found it
+        }
+        if (strcmp(cities[i].name, to) == 0) // If this matches our destination city
+        {
+            dest_exists = true; // Mark that destination exists
+            to_index = i; // Remember where we found it
+        }
+    }
+
+    if (!source_exists || !dest_exists) // If any of the cities do not exist
+    {
+        printf("\t\t\t\t" YELLOW "One or both cities don't exist!\n" RESET); // Tell user there's a problem
+        return; 
+    }
+
+  
+    add_link(&cities[from_index], to, distance); // Add the new connection from source to destinatio
+    printf("\t\t\t\t" GREEN "Path added successfully!\n" RESET); // Tell user it worked
+}
+//------------------------------------------------------//
+void find_path(City cities[], int city_count, char *start, char *end) 
+{
+    char *visited[VISITED_MAX]; // Array to check cities in current path
+    char *best_path[VISITED_MAX]; // Array to remember the best path found
+    int best_count = 0; // Counter for how many cities are in the best path
+    int min_dist = NOT_FOUND; // check the shortest distance found (NOT_FOUND means none yet)
+
+    // Call recursive function to try all possible paths
+    find_path_recursive(cities, city_count, start, end, visited, 0, 0,
+                        best_path, &best_count, &min_dist);
+
+    if (min_dist != NOT_FOUND) // If we found at least one path
+    {
+        printf("\t\t\t\t" YELLOW "Shortest path:\n" RESET); 
+        print_path(best_path, best_count, min_dist); // Display the best path
+    }
+}
+//------------------------------------------------------//
 void find_path_recursive(City cities[], int city_count, char *start, char *end,
                          char *visited[], int visited_count, int total_dist,
                          char *best_path[], int *best_count, int *min_dist)
 {
-    // find the current city index
-    bool found = false;
-    int curr_idx = -1;
-    for (int i = 0; i < city_count && !found; i++)
+    // Find the current city in our list
+    bool found = false; // propose we haven't found it
+    int curr_idx = NOT_FOUND; // Initialize index as not found
+    for (int i = 0; i < city_count && !found; i++) // Look through all cities
     {
-        if (strcmp(cities[i].name, start) == 0)
+        if (strcmp(cities[i].name, start) == 0) // Compare city names
         {
-            found = true;
-            curr_idx = i;
+            found = true; // Mark that we found it
+            curr_idx = i; // Remember where it is
         }
     }
-    if (!found)
-        return; // if city not found, exit
+    if (!found) // Stop this search path if we couldn't find this city
+        return; 
 
-    // add the current city to the visited path
-    visited[visited_count++] = start;
+    // Add current city to our path
+    visited[visited_count++] = start; // Add city to visited list and increase count
 
-    // check if we reached the destination and if this path is better
-    bool is_dest = (strcmp(start, end) == 0);
-    bool is_better = (*min_dist == -1 || total_dist < *min_dist);
+    // Check if we've reached our destination
+    bool is_dest = (strcmp(start, end) == 0); // True if current city is our destination
+    bool is_better = (*min_dist == NOT_FOUND || total_dist < *min_dist); // True if this path is shorter than last best
 
-    if (is_dest && is_better)
+    if (is_dest && is_better) // If we reached destination with a better path
     {
-        *min_dist = total_dist;
-        *best_count = visited_count;
-        // update the best path found so far
-        for (int i = 0; i < visited_count; i++)
+        *min_dist = total_dist; // Update shortest distance
+        *best_count = visited_count; // Update count of cities in best path
+        // Save this path as our new best path
+        for (int i = 0; i < visited_count; i++) // For each city in the path
         {
-            best_path[i] = visited[i];
+            best_path[i] = visited[i]; // Copy to best path array
         }
-        return;
+        return; 
     }
 
-    // try each neighbor that has not been visited yet
-    pLink *link = cities[curr_idx].Links;
-    while (link)
+    // Try each neighbor city that we haven't visited yet
+    pLink *link = cities[curr_idx].Links; // Start with first connection
+    while (link) // For each connection from current city
     {
-        bool visited_before = false;
-        for (int i = 0; i < visited_count && !visited_before; i++)
+        bool visited_before = false; // Assume we haven't visited the destination
+        for (int i = 0; i < visited_count && !visited_before; i++) // Check our visited list
         {
-            if (strcmp(visited[i], link->dest) == 0)
+            if (strcmp(visited[i], link->dest) == 0) // If this city is already in our path
             {
-                visited_before = true;
+                visited_before = true; // Mark it as visited
             }
         }
 
-        if (!visited_before)
+        if (!visited_before) // If this is a new city we haven't been to yet
         {
+            // Try going to this next city (recursive call)
             find_path_recursive(cities, city_count, link->dest, end,
                                 visited, visited_count, total_dist + link->dist,
                                 best_path, best_count, min_dist);
         }
-        link = link->newCity;
+        link = link->newCity; // Move to next connection
     }
 }
 //------------------------------------------------------//
-// find and print the shortest path from a start city to an end city
-void find_path(City cities[], int city_count, char *start, char *end)
+void show_reachable_cities(City cities[], int city_count, const char *city_name) 
 {
-    char *visited[VISITED_MAX];
-    char *best_path[VISITED_MAX];
-    int best_count = 0;
-    int min_dist = -1;
-
-    find_path_recursive(cities, city_count, start, end, visited, 0, 0,
-                        best_path, &best_count, &min_dist);
-
-    if (min_dist != -1)
+    // Find the city in our list
+    int city_index = NOT_FOUND; // Start with not found
+    for (int i = 0; i < city_count; i++) // Look through all cities
     {
-        printf("\t\t\t\t" YELLOW "Shortest path:\n" RESET);
-        print_path(best_path, best_count, min_dist);
-    }
-}
-//------------------------------------------------------//
-// add a new city if it does not already exist
-void add_new_city(City cities[], int *city_count)
-{
-    char new_city[30];
-    printf("\t\t\t\tEnter new city name: ");
-    scanf("%s", new_city);
-
-    // check if the city is already present
-    bool city_exists = false;
-    for (int i = 0; i < *city_count; i++)
-    {
-        if (strcmp(cities[i].name, new_city) == 0)
+        if (strcmp(cities[i].name, city_name) == 0) // Compare city names
         {
-            city_exists = true;
-            break;
+            city_index = i; // Remember where we found it
+            break; 
         }
     }
 
-    if (city_exists)
+    // If the city is not in our list
+    if (city_index == NOT_FOUND) // If city wasn't found
     {
-        printf("\t\t\t\t" RED "City already exists!\n" RESET);
-        return;
+        printf("\t\t\t\t" RED "City not found!\n" RESET); // Tell user city doesn't exist
+        return; // Exit the function
     }
 
-    // add the new city and set its links to null
-    strcpy(cities[*city_count].name, new_city);
-    cities[*city_count].Links = NULL;
-    (*city_count)++;
-    printf("\t\t\t\t" GREEN "City added successfully!\n" RESET);
-}
-//------------------------------------------------------//
-// add a new connection between two cities
-void add_new_path(City cities[], int city_count)
-{
-    char from[30], to[30];
-    int distance;
-    bool source_exists = false, dest_exists = false;
-    int from_index = -1, to_index = -1;
-
-    printf("\t\t\t\tEnter source city: ");
-    scanf("%s", from);
-    printf("\t\t\t\tEnter destination city: ");
-    scanf("%s", to);
-    printf("\t\t\t\tEnter distance: ");
-    scanf("%d", &distance);
-
-    // check if both cities exist and get their indexes
-    for (int i = 0; i < city_count; i++)
+    // Print all cities connected to this one
+    printf("\t\t\t\t" YELLOW "Cities reachable from " CYAN "%s" RESET ":\n", city_name); 
+    pLink *link = cities[city_index].Links; // Start with first connection
+    if (link == NULL) // If there are no connections
     {
-        if (strcmp(cities[i].name, from) == 0)
-        {
-            source_exists = true;
-            from_index = i;
-        }
-        if (strcmp(cities[i].name, to) == 0)
-        {
-            dest_exists = true;
-            to_index = i;
-        }
+        printf("\t\t\t\t" RED "No reachable cities.\n" RESET); // Tell user this city has no neighbors
+        return; 
     }
 
-    if (!source_exists || !dest_exists)
+    while (link) // For each connection
     {
-        printf("\t\t\t\t" YELLOW "One or both cities don't exist!\n" RESET);
-        return;
-    }
-
-    // add the link from the source city to the destination city
-    add_link(&cities[from_index], to, distance);
-    printf("\t\t\t\t" GREEN "Path added successfully!\n" RESET);
-}
-//------------------------------------------------------//
-// remove a city and its associated links
-void delete_city(City cities[], int *city_count)
-{
-    char to_delete[30];
-    printf("\t\t\t\tEnter city name to delete: ");
-    scanf("%s", to_delete);
-
-    // search for the city to delete
-    bool city_found = false;
-    int del_idx = -1;
-    for (int i = 0; i < *city_count && !city_found; i++)
-    {
-        if (strcmp(cities[i].name, to_delete) == 0)
-        {
-            city_found = true;
-            del_idx = i;
-        }
-    }
-
-    if (!city_found)
-    {
-        printf("\t\t\t\t" RED "City not found!\n" RESET);
-        return;
-    }
-
-    // free all links from this city
-    pLink *temp;
-    while (cities[del_idx].Links)
-    {
-        temp = cities[del_idx].Links;
-        cities[del_idx].Links = temp->newCity;
-        free(temp);
-    }
-
-    // remove links to this city from other cities
-    for (int i = 0; i < *city_count; i++)
-    {
-        if (i == del_idx)
-            continue;
-
-        // if the first link matches the city to delete, remove it
-        if (cities[i].Links && strcmp(cities[i].Links->dest, to_delete) == 0)
-        {
-            temp = cities[i].Links;
-            cities[i].Links = temp->newCity;
-            free(temp);
-        }
-    }
-
-    // shift remaining cities in the array to fill the gap
-    for (int i = del_idx; i < *city_count - 1; i++)
-    {
-        cities[i] = cities[i + 1];
-    }
-
-    (*city_count)--; // update the total count of cities
-    printf("\t\t\t\t" GREEN "City deleted successfully!\n" RESET);
-}
-//----------------------------------------------------------------------------//
-// show the cities that can be reached from a given city
-void show_reachable_cities(City cities[], int city_count, const char *city_name)
-{
-    // find the city in the list
-    int city_index = -1;
-    for (int i = 0; i < city_count; i++)
-    {
-        if (strcmp(cities[i].name, city_name) == 0)
-        {
-            city_index = i;
-            break;
-        }
-    }
-
-    // if the city is not found, display a message
-    if (city_index == -1)
-    {
-        printf("\t\t\t\t" RED "City not found!\n" RESET);
-        return;
-    }
-
-    // print all linked cities
-    printf("\t\t\t\t" YELLOW "Cities reachable from " CYAN "%s" RESET ":\n", city_name);
-    pLink *link = cities[city_index].Links;
-    if (link == NULL)
-    {
-        printf("\t\t\t\t" RED "No reachable cities.\n" RESET);
-        return;
-    }
-
-    while (link)
-    {
-        printf("\t\t\t\t- " GREEN "%s " RESET "(Distance: " CYAN "%d" RESET ")\n", link->dest, link->dist);
-        link = link->newCity;
+        printf("\t\t\t\t- " GREEN "%s " RESET "(Distance: " CYAN "%d" RESET ")\n", link->dest, link->dist); // Print city and distance
+        link = link->newCity; // Move to next connection
     }
 }
 
 //======================================================================
-#endif
+#endif 

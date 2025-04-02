@@ -10,7 +10,8 @@
 
 /------/How Data is Organized (data.csv)** :/------/
 
-  CityName,ConnectedCity1:Distance,ConnectedCity2:Distance, ...
+  CityName,ConnectedCity1:Distance
+  CityName,ConnectedCity2:Distance ...
 
 
        * City1 is connected to:
